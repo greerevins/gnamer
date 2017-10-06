@@ -2,7 +2,7 @@
 
 
 (defun open-button-selection-callback (the-interface)
-  (let* ((names-path (prompt-for-file "Choose a names file"))
+  (let* ((names-path (prompt-for-file "Choose a names file" :filter "*.names"))
          (the-names (readfile names-path))
          (path-label (path-label the-interface)))
     (setf (names-file the-interface) names-path)
@@ -21,9 +21,13 @@
           name-panes)))
 
 (defun choose-count-callback (the-data the-interface)
-  (let ((how-many (parse-integer the-data)))
+  (let* ((how-many (parse-integer the-data))
+         (how-many-text (format nil "~a" how-many))
+         (the-button (count-menu-button the-interface)))
     (setf (name-count the-interface)
-          how-many)))
+          how-many)
+    (setf (item-text the-button)
+          how-many-text)))
 
 (define-interface name-generator-window ()
   ;; slots
@@ -38,8 +42,9 @@
                      :selection-callback 'open-button-selection-callback)
    (path-label title-pane :text "" :accessor path-label)
    (count-menu-button popup-menu-button
-                      :text "Count"
-                      :menu count-menu)
+                      :text "1"
+                      :menu count-menu
+                      :accessor count-menu-button)
    (generate-name-button push-button 
                          :text "generate"
                          :data :ignore-this-data

@@ -7,7 +7,7 @@
          (path-label (path-label the-interface)))
     (setf (names-file the-interface) names-path)
     (setf (title-pane-text path-label) 
-          (namestring names-path))
+          (pathname-name names-path))
     (setf (sample-names the-interface)
           the-names)))
 

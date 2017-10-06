@@ -1,6 +1,6 @@
 (in-package :namer)
 
-(defparameter $path "/Users/greer/Desktop/gnamer/us.names")
+(defparameter $path "/Users/greer/Desktop/greersnamer/us.names")
 
 (defun readfile (the-path)
   (with-open-file (in the-path)
