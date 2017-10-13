@@ -70,5 +70,30 @@
 
 ;;; (defparameter $window (contain (make-instance 'name-generator-window)))
 
+(define-interface names-directory-window ()
+  ;; slots
+  ((names-directory-path :accessor names-directory-path :initform nil :initarg :names-directory-path))
+  ;; panes
+  (:panes
+   (path-label title-pane :text (namestring names-directory-path) :accessor path-label)
+   (file-list list-panel :items nil :alternating-background t)
+   (cancel-button push-button 
+                  :text "Cancel")
+   (okay-button  push-button 
+                  :text "Okay"))
+  ;; layouts
+  (:layouts
+   (buttons-layout row-layout '(cancel-button okay-button))
+   (main-layout column-layout '(path-label file-list buttons-layout)
+                :adjust :center))
+  ;; defaults
+  (:default-initargs :layout 'main-layout
+   :title "Name files"))
+
+(defun open-name-files-directory-ui (gnamer-home)
+  (contain (make-instance 'names-directory-window :names-directory-path gnamer-home)))
+
+
+
 ;;;; Evangeline Walton
 ;;;; https://www.amazon.com/Mabinogion-Tetralogy-Evangeline-Walton/dp/1585675040
