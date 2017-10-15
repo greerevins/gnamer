@@ -70,21 +70,36 @@
 
 ;;; (defparameter $window (contain (make-instance 'name-generator-window)))
 
+(defun name-file-selection-callback (a-names-directory-window)
+  (let* ((a-file-list (get-file-list a-names-directory-window))
+         (selected-index (choice-selection a-file-list))
+         (files (collection-items a-file-list))
+         (selected-file (elt files selected-index)))
+    ;;; TODO: make this actually work!
+    (display-message "You chose ~S" selected-file)))
+
 (define-interface names-directory-window ()
   ;; slots
   ((names-directory-path :accessor names-directory-path :initform nil :initarg :names-directory-path))
   ;; panes
   (:panes
+   (path-title title-pane :text "name files:")
    (path-label title-pane :text (namestring names-directory-path) :accessor path-label)
-   (file-list list-panel :items nil :alternating-background t)
+   (file-list list-panel :items (directory (merge-pathnames "*.names"
+                                                            (find-gnamer-home-pathname))) 
+              :alternating-background t
+              :accessor get-file-list )
    (cancel-button push-button 
                   :text "Cancel")
    (okay-button  push-button 
-                  :text "Okay"))
+                  :text "Okay"
+                  :selection-callback 'name-file-selection-callback
+                  :callback-type :interface))
   ;; layouts
   (:layouts
+   (path-layout row-layout '(path-title path-label))
    (buttons-layout row-layout '(cancel-button okay-button))
-   (main-layout column-layout '(path-label file-list buttons-layout)
+   (main-layout column-layout '(path-layout file-list buttons-layout)
                 :adjust :center))
   ;; defaults
   (:default-initargs :layout 'main-layout
@@ -93,6 +108,7 @@
 (defun open-name-files-directory-ui (gnamer-home)
   (contain (make-instance 'names-directory-window :names-directory-path gnamer-home)))
 
+;;; (defparameter $window (open-name-files-directory-ui (find-gnamer-home-pathname)))
 
 
 ;;;; Evangeline Walton
