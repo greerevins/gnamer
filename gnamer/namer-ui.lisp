@@ -1,11 +1,19 @@
 (in-package :namer)
 
+;;; ---------------------------------------------------------
+;;; CLASS name-generator-window
+;;; ---------------------------------------------------------
 
 (defun open-button-selection-callback (the-interface)
-  (let* ((names-path (prompt-for-file "Choose a names file" :filter "*.names"))
+  (let* ((names-path (prompt-for-file "Choose a names file" 
+                                      :pathname (find-gnamer-home-pathname)
+                                      :filter "*.names"))
          (the-names (readfile names-path))
          (path-label (path-label the-interface)))
-    (setf (names-file the-interface) names-path)
+    (setf (names-file the-interface)
+          names-path)
+    (setf (current-names the-interface)
+          the-names)
     (setf (title-pane-text path-label) 
           (pathname-name names-path))
     (setf (sample-names the-interface)
@@ -32,6 +40,7 @@
 (define-interface name-generator-window ()
   ;; slots
   ((names-file :accessor names-file :initform nil)
+   (current-names :accessor current-names :initform nil)
    (sample-names :accessor sample-names :initform nil)
    (name-count :accessor name-count :initform 1))
   ;; panes
@@ -70,17 +79,25 @@
 
 ;;; (defparameter $window (contain (make-instance 'name-generator-window)))
 
+;;; ---------------------------------------------------------
+;;; CLASS names-directory-window
+;;; ---------------------------------------------------------
+
 (defun name-file-selection-callback (a-names-directory-window)
   (let* ((a-file-list (get-file-list a-names-directory-window))
          (selected-index (choice-selection a-file-list))
          (files (collection-items a-file-list))
-         (selected-file (elt files selected-index)))
-    ;;; TODO: make this actually work!
-    (display-message "You chose ~S" selected-file)))
+         (selected-file (elt files selected-index))
+         (my-name-generator-window (get-name-generator-window a-names-directory-window)))
+    (when my-name-generator-window
+      (setf (current-names my-name-generator-window)
+            (readfile selected-file)))))
 
 (define-interface names-directory-window ()
   ;; slots
-  ((names-directory-path :accessor names-directory-path :initform nil :initarg :names-directory-path))
+  ((the-name-generator-window :accessor get-name-generator-window 
+                              :initarg :name-generator-window)
+   (names-directory-path :accessor names-directory-path :initform nil :initarg :names-directory-path))
   ;; panes
   (:panes
    (path-title title-pane :text "name files:")
@@ -103,7 +120,8 @@
                 :adjust :center))
   ;; defaults
   (:default-initargs :layout 'main-layout
-   :title "Name files"))
+   :title "Name files"
+   :name-generator-window nil))
 
 (defun open-name-files-directory-ui (gnamer-home)
   (contain (make-instance 'names-directory-window :names-directory-path gnamer-home)))
