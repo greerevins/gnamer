@@ -1,8 +1,5 @@
 (in-package :namer)
 
-
-(defparameter $names (readfile $path))
-
 (defun make-name (name-list)
   (let* ((left (any name-list))
          (left-half (firsthalf left))

@@ -4,20 +4,27 @@
 ;;; CLASS name-generator-window
 ;;; ---------------------------------------------------------
 
+
 (defun open-button-selection-callback (the-interface)
-  (let* ((names-path (prompt-for-file "Choose a names file" 
-                                      :pathname (find-gnamer-home-pathname)
-                                      :filter "*.names"))
-         (the-names (readfile names-path))
-         (path-label (path-label the-interface)))
-    (setf (names-file the-interface)
-          names-path)
-    (setf (current-names the-interface)
-          the-names)
-    (setf (title-pane-text path-label) 
-          (pathname-name names-path))
-    (setf (sample-names the-interface)
-          the-names)))
+  (let ((names-path (prompt-for-file "Choose a names file" 
+                                     :pathname (find-gnamer-home-pathname)
+                                     :filter "*.names")))
+    (if names-path
+        ;; they selected something
+        (let* ((the-names (readfile names-path))
+               (path-label (path-label the-interface)))
+          (setf (names-file the-interface)
+                names-path)
+          (setf (current-names the-interface)
+                the-names)
+          (setf (title-pane-text path-label) 
+                (pathname-name names-path))
+          (setf (sample-names the-interface)
+                the-names))
+      ;; they canceled
+      nil)))
+
+
 
 (defun generate-button-selection-callback (the-interface)
   (let* ((how-many (name-count the-interface))
