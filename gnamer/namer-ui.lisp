@@ -7,7 +7,7 @@
 
 (defun open-button-selection-callback (the-interface)
   (let ((names-path (prompt-for-file "Choose a names file" 
-                                     :pathname (find-gnamer-home-pathname)
+                                     :pathname (user-homedir-pathname)
                                      :filter "*.names")))
     (if names-path
         ;; they selected something
