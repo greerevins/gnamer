@@ -7,8 +7,4 @@
         while line
         collect line)))
 
-(defun any (a-sequence)
-  (elt a-sequence
-       (random (length a-sequence))))
-
 
