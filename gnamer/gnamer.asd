@@ -15,6 +15,7 @@
    (:file "letters")
    (:file "analyze-names")
    (:file "make-names")
-   (:file "namer-ui")))
+   ;;(:file "namer-ui")
+   ))
 
 ;;; (asdf:load-system :namer)
