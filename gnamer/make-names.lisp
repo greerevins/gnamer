@@ -69,3 +69,4 @@
 ;;; (defparameter $name-starts (lines "/Users/mikel/Workshop/src/gnamer/us.names"))
 ;;; (defparameter $name-ends (lines "/Users/mikel/Workshop/src/gnamer/latin.names"))
 ;;; (make-names2 $name-starts $name-ends 20)
+;;; (defparameter $words (lines "/usr/share/dict/words"))
